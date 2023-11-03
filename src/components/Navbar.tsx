@@ -8,6 +8,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
+import { useEffect } from "react";
 
 
 interface HamburgerMenuProps {
@@ -47,7 +48,7 @@ export default function Navbar() {
   }
 
   return (
-    <div className='flex items-center justify-between py-4 md:py-8 lg:py-16'>
+    <div className='sticky top-0 flex items-center justify-between py-4 md:py-8 lg:py-16' id="navbar">
       <Link to='/'>
         <img src={logo} alt="logo" />
       </Link>

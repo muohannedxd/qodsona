@@ -74,12 +74,18 @@
   * {
     @apply border-border;
   }
+
+  html {
+    overflow: auto;
+  }
+
   body {
     background: linear-gradient(180deg, #FFF 0%, #475569 100%);
     background-repeat: no-repeat;
     background-size: cover;
     font-family: 'Inter', sans-serif;
     box-sizing: border-box;
+    overflow: auto;
     @apply h-screen px-10 md:px-16 lg:px-20 xl:px-28
   }
 }
