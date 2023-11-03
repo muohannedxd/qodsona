@@ -13,8 +13,9 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 // Import the Firebase Auth SDK
 import { useNavigate } from "react-router-dom";
-import { auth } from "../config/firebase";
+import { auth, db } from "../config/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { addDoc, collection } from "firebase/firestore";
 
 export default function Signup() {
   // form data
@@ -71,6 +72,15 @@ export default function Signup() {
 
   const navigate = useNavigate();
 
+  const createUser = async (nm: String, mail:String, phn:String, pwd:String) => {
+    await addDoc(collection(db, 'users'), {
+      name: nm,
+      email: mail,
+      phone: phn,
+      password: pwd
+    })
+  }
+
   // handle submission
   async function handleSubmit(event) {
     event.preventDefault();
@@ -89,6 +99,7 @@ export default function Signup() {
 
     // console.log(data);
     try {
+      createUser(name, email, phone, password)
       const userCredential = await createUserWithEmailAndPassword(auth, email, password)
       const user = userCredential.user
       localStorage.setItem('token', user.accessToken)
@@ -111,6 +122,7 @@ export default function Signup() {
     });
 
     navigate("/search");
+    window.location.reload();
   }
 
   return (

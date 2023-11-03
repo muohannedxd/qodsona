@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Navbar from "@/components/Navbar";
 
 export default function Login() {
   // form data
@@ -86,6 +87,7 @@ export default function Login() {
   }
 
   return (
+    
     <div className="h-[100vh] flex justify-center lg:px-42">
       <Tabs
         defaultValue="signup"
