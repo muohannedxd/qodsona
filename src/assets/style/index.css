@@ -79,6 +79,7 @@
     background-repeat: no-repeat;
     background-size: cover;
     font-family: 'Inter', sans-serif;
+    box-sizing: border-box;
     @apply h-screen px-10 md:px-16 lg:px-20 xl:px-28
   }
 }
