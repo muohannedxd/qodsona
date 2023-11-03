@@ -8,8 +8,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-import { useEffect } from "react";
-
 
 interface HamburgerMenuProps {
   navLinks: Object,
