@@ -31,7 +31,6 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ navLinks }) =>
           }
         </div>
       </AccordionContent>
-
     </AccordionItem>
   </Accordion>
 
