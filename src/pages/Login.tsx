@@ -1,5 +1,6 @@
 import gmail from "../assets/images/gmail.png";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Signup from "@/components/Signup";
 import {
   Card,
@@ -12,9 +13,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Navbar from "@/components/Navbar";
+import { auth } from "@/config/firebase";
 
 export default function Login() {
   // form data
@@ -27,6 +28,7 @@ export default function Login() {
   const [lengthError, setLengthError] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [fillError, setFillError] = useState(false);
+  const [notLoggedIn, setNotLoggedIn] = useState(false)
 
   // regex validator for email
   const validateEmail = (email) => {
@@ -57,9 +59,10 @@ export default function Login() {
     });
   }
 
+  const navigate = useNavigate();
+
   // handle submission
-  function handleSubmit(event) {
-    event.preventDefault();
+  async function handleSubmit(event) {
     event.preventDefault();
 
     const { email, password } = data;
@@ -70,12 +73,25 @@ export default function Login() {
 
     // If all fields are filled, check for other errors
     if (lengthError || emailError) {
-      console.log("errooooooors");
+      console.log("could not log in");
       return;
     }
 
-    console.log(data);
-
+    try {
+      const userCredentials = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredentials.user;
+      localStorage.setItem("token", user.accessToken);
+      localStorage.setItem("user", JSON.stringify(user));
+    } catch (error) {
+      setNotLoggedIn(true)
+      console.error(error);
+      return
+    }
+    
     // Clear the form data
     setEmailError(false);
     setFillError(false);
@@ -84,10 +100,12 @@ export default function Login() {
       email: "",
       password: "",
     });
+
+    navigate("/search");
+    window.location.reload();
   }
 
   return (
-    
     <div className="h-[100vh] flex justify-center lg:px-42">
       <Tabs
         defaultValue="signup"
@@ -158,6 +176,11 @@ export default function Login() {
                   <img className="w-6" src={gmail} alt="github_icon" />
                 </p>
               </Button>
+              {notLoggedIn && 
+              <div className="mt-6 py-2 px-6 rounded-lg bg-red-400 border-4 border-red-500 font-semibold">
+                <p> Invalid Email or Password </p>
+              </div>
+              }
             </CardFooter>
           </Card>
         </TabsContent>

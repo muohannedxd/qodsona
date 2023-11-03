@@ -29,14 +29,20 @@ export default function Signup() {
 
   // error control
   const [lengthError, setLengthError] = useState(false);
+  const [nameError, setNameError] = useState(false)
   const [emailError, setEmailError] = useState(false);
   const [matchPassError, setMatchPassError] = useState(false);
   const [fillError, setFillError] = useState(false);
+  const [notLoggedIn, setNotLoggedIn] = useState(false)
 
   // regex validator for email
   const validateEmail = (email) => {
     const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
     return emailRegex.test(email);
+  };
+  const validateFullName = (name) => {
+    const fullNameRegex = /^[a-zA-Z\s]+$/i;
+    return fullNameRegex.test(name);
   };
 
   // handling form filling
@@ -52,6 +58,11 @@ export default function Signup() {
       setEmailError(true);
     } else {
       setEmailError(false);
+    }
+    if (name == "name" && !validateFullName(value)) {
+      setNameError(true);
+    } else {
+      setNameError(false);
     }
     if (
       (name == "password" && value != data.confirm) ||
@@ -72,12 +83,11 @@ export default function Signup() {
 
   const navigate = useNavigate();
 
-  const createUser = async (nm: String, mail:String, phn:String, pwd:String) => {
+  const createUser = async (nm: String, mail:String, phn:String) => {
     await addDoc(collection(db, 'users'), {
       name: nm,
       email: mail,
       phone: phn,
-      password: pwd
     })
   }
 
@@ -93,22 +103,25 @@ export default function Signup() {
 
     // If all fields are filled, check for other errors
     if (lengthError || emailError || matchPassError) {
-      console.log("errooooooors");
+      console.log("could not sign up");
       return;
     }
 
     // console.log(data);
     try {
-      createUser(name, email, phone, password)
+      createUser(name, email, phone)
       const userCredential = await createUserWithEmailAndPassword(auth, email, password)
       const user = userCredential.user
       localStorage.setItem('token', user.accessToken)
       localStorage.setItem('user', JSON.stringify(user))
     } catch (error) {
+      setNotLoggedIn(true)
       console.error(error)
+      return
     }
 
     // Clear the form data
+    setNameError(false)
     setEmailError(false);
     setFillError(false);
     setLengthError(false);
@@ -144,6 +157,7 @@ export default function Signup() {
             value={data.name}
           />
         </div>
+        {nameError && <p className="error-msg-auth">Enter your real valid name</p>}
         <div className="space-y-1">
           <Label htmlFor="username">Email</Label>
           <Input
@@ -155,7 +169,7 @@ export default function Signup() {
             onChange={handleChange}
           />
         </div>
-        {emailError && <p className="error-msg-auth">Email is not valid</p>}
+        {emailError && <p className="error-msg-auth">Enter your valid Email Address</p>}
         <div className="space-y-1">
           <Label htmlFor="username">Phone</Label>
           <Input
@@ -218,6 +232,11 @@ export default function Signup() {
             <img className="w-6" src={gmail} alt="github_icon" />
           </p>
         </Button>
+        {notLoggedIn && 
+              <div className="mt-6 py-2 px-6 rounded-lg bg-red-400 border-4 border-red-500 font-semibold">
+                <p> An error occured, try with a different Email Address </p>
+              </div>
+              }
       </CardFooter>
     </Card>
   );

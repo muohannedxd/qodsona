@@ -3,7 +3,6 @@ import logo from "../assets/images/icon.png";
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/auth/useAuth";
-import { useEffect } from "react";
 
 export default function Navbar() {
   const { isLoggedIn } = useAuth();
