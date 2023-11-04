@@ -36,17 +36,19 @@ const TagsInput: React.FC<TagsInputProps> = ({ formData, setFormData }) => {
         })
     )
 
-    const handleAgeRangesChange = (selected: any[]) =>
+    const handleAgeRangesChange = (selected: any[]) => {
         setFormData((prevFormData: any) => ({
             ...prevFormData,
             ageRanges: selected,
         }))
+    }
 
-    const handleGendersChange = (selected: any[]) =>
+    const handleGendersChange = (selected: any[]) => {
         setFormData((prevFormData: any) => ({
             ...prevFormData,
             genders: selected
         }))
+    }
 
 
     return <div>

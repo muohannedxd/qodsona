@@ -39,12 +39,12 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ formData, setFormData }) => {
 
 
     return <>
-        <div className="grid grid-cols-4 gap-1">
+        <div className="grid grid-cols-4 gap-1 my-2">
             {
                 (formData.imageURLs.length > 0) &&
                 formData.imageURLs
                     .map((imageURL: string, index: number) =>
-                        <div key={`img-${index}`} className="overflow-hidden max-h-[20rem] max-w-[20rem] rounded-[8px] object-cover">
+                        <div key={`img-${index}`} className="overflow-hidden max-h-[20rem] max-w-[20rem] rounded-[8px] object-cover border-1 ">
                             <img src={imageURL} className="max-h-full" alt="preview" />
                         </div>)
             }

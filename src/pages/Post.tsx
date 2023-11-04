@@ -11,7 +11,7 @@ import {
   RadioGroupItem
 } from "@/components/ui/radio-group"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -26,11 +26,17 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage"
 import { useNavigate } from "react-router-dom"
 
 import { nanoid } from "nanoid"
+import { useAuth } from "@/auth/useAuth"
 
 
-export default function Post() {
+  export default function Post() {
 
-  const navigate = useNavigate()
+    const { isLoggedIn, user } = useAuth()
+    const navigate = useNavigate()
+
+    if ( !isLoggedIn ) {
+      navigate("/login")
+    }
 
   const [formData, setFormData] = useState({
     postType: "",
@@ -38,7 +44,7 @@ export default function Post() {
     ageRanges: [],
     genders: [],
     imageURLs: [],
-  }) 
+  })
 
   const handleSubmit = async (event: any) => {
     event.preventDefault()
@@ -107,12 +113,12 @@ export default function Post() {
               postType: (event.target as HTMLFormElement).value
             }))}>
             <div className="flex gap-3">
-              <RadioGroupItem id="missing" value="missing" />
+              <RadioGroupItem id="missing" value="missing" className="text-black" />
               <Label htmlFor="missing">Ask for help finding a missing person</Label>
             </div>
 
             <div className="flex gap-3">
-              <RadioGroupItem id="reporting" value="reporting" />
+              <RadioGroupItem id="reporting" value="reporting" className="text-black" />
               <Label htmlFor="reporting">Report someone who is missing</Label>
             </div>
 
@@ -133,7 +139,7 @@ export default function Post() {
           <TagsInput formData={formData} setFormData={setFormData} />
           <ImageUpload formData={formData} setFormData={setFormData} />
 
-          <Button className="w-full">Submit</Button>
+          <Button className="w-full bg-slate-900">Submit</Button>
         </form>
       </CardContent>
     </Card >
