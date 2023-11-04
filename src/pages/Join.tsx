@@ -205,9 +205,9 @@ export default function Login() {
               </Button>
 
               <div className="flex flex-row justify-center items-center my-4">
-                <hr className="w-48 h-[2px] mx-auto my-4 bg-slate-800 border-0 rounded md:my-10" />
+              <hr className="w-24 md:w-36 lg:w-64 h-[2px] md:h-[3px] mx-auto my-4 bg-slate-800 border-0 rounded md:my-10" />
                 <span className="mx-6"> or </span>
-                <hr className="w-48 h-[2px] mx-auto my-4 bg-slate-800 border-0 rounded md:my-10" />
+                <hr className="w-24 md:w-36 lg:w-64 h-[2px] md:h-[3px] mx-auto my-4 bg-slate-800 border-0 rounded md:my-10" />
               </div>
 
               <Button className="w-[100%]" onClick={loginGoogle}>

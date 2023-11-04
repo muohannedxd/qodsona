@@ -25,9 +25,12 @@ export default function Navbar() {
         {!isLoggedIn ? (
           <NavLink to="/login"> Join </NavLink>
         ) : (
-          <Button variant={"destructive"} onClick={logout}>
-            Logout
-          </Button>
+          <Link to='/profile'>
+            <Avatar>
+              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
+          </Link>
         )}
       </div>
     </div>
