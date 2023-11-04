@@ -23,7 +23,6 @@ import TagsInput from "@/components/TagsInput"
 import db, { storage } from "@/config/firebase"
 import { collection, addDoc } from "firebase/firestore"
 import { ref, uploadBytes } from "firebase/storage"
-import { randomUUID } from "crypto"
 import { useNavigate } from "react-router-dom"
 
 import { nanoid } from "nanoid"
@@ -68,7 +67,7 @@ export default function Post() {
 
     images?.forEach(async (image) => {
       const imageName = image.name
-      const path = `images/${imageName}}`
+      const path = `images/${imageName}${nanoid()}}`
 
       try {
         await uploadFile(image, path)
@@ -87,9 +86,9 @@ export default function Post() {
         imageURLs: imageURLs
       })
 
+      console.log(docRef.id)
       navigate("/")
 
-      console.log(docRef.id)
     } catch (e) {
       alert(e)
     }
