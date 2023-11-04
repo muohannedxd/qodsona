@@ -51,7 +51,7 @@ export default function Post() {
     return url;
   }
 
-  const handleSubmit = async (event: Event) => {
+  const handleSubmit = async (event: any) => {
     event.preventDefault()
 
     if (!event?.target) return;
@@ -60,8 +60,8 @@ export default function Post() {
     const imageURLs: string[] = []
     const tags: string[] = []
 
-    ageRanges.forEach(ageRange => tags.push(ageRange.value))
-    genders.forEach(gender => tags.push(gender.value))
+    ageRanges.forEach(ageRange => tags.push((ageRange as HTMLFormElement).value))
+    genders.forEach(gender => tags.push((gender as HTMLFormElement).value))
 
     const images = Array.from((document.getElementById("files") as HTMLInputElement)?.files as FileList);
 
