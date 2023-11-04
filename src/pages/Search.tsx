@@ -63,7 +63,7 @@ export default function Search() {
       {searchResults.length > 0 ? (
         searchResults.map((post) => (
           <div className="col-sm-6" key={post.id}>
-            <PostCard {...post} />
+            <PostCard {...post} postId={post.id} />
           </div>
         ))
       ) : (
