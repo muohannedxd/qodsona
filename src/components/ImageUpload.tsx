@@ -38,14 +38,16 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ formData, setFormData }) => {
     }, [])
 
 
+    console.log(formData.imageURLs)
     return <>
         <div className="grid grid-cols-4 gap-1">
             {
                 (formData.imageURLs.length > 0) &&
                 formData.imageURLs
-                    .map((imageURL: string) => <div className="overflow-hidden max-h-[20rem] max-w-[20rem] rounded-[8px] object-cover">
-                        <img src={imageURL} className="max-h-full" alt="preview" />
-                    </div>)
+                    .map((imageURL: string, index: number) =>
+                        <div key={`img-${index}`} className="overflow-hidden max-h-[20rem] max-w-[20rem] rounded-[8px] object-cover">
+                            <img src={imageURL} className="max-h-full" alt="preview" />
+                        </div>)
             }
         </div>
         <Label htmlFor="images">Upload some images for better identification</Label>

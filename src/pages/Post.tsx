@@ -22,7 +22,7 @@ import TagsInput from "@/components/TagsInput"
 
 import db, { storage } from "@/config/firebase"
 import { collection, addDoc } from "firebase/firestore"
-import { ref, uploadBytes } from "firebase/storage"
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage"
 import { useNavigate } from "react-router-dom"
 
 import { nanoid } from "nanoid"
@@ -37,19 +37,8 @@ export default function Post() {
     description: "",
     ageRanges: [],
     genders: [],
-    imageURLs: []
-  })
-
-  const uploadFile = async (file: any, path: any) => {
-    const storageRef = ref(storage, path);
-    await uploadBytes(storageRef, file);
-  }
-
-  const getDownloadURL = async (path: any) => {
-    const storageRef = ref(storage, path);
-    const url: any = await getDownloadURL(storageRef);
-    return url;
-  }
+    imageURLs: [],
+  }) 
 
   const handleSubmit = async (event: any) => {
     event.preventDefault()
@@ -57,33 +46,43 @@ export default function Post() {
     if (!event?.target) return;
 
     const { postType, description, ageRanges, genders } = formData;
-    const imageURLs: string[] = []
+    const myImages: string[] = []
     const tags: string[] = []
 
-    ageRanges.forEach(ageRange => tags.push((ageRange as HTMLFormElement).value))
-    genders.forEach(gender => tags.push((gender as HTMLFormElement).value))
+    ageRanges.forEach((ageRange: any) => tags.push((ageRange as HTMLFormElement).value))
+    genders.forEach((gender: any) => tags.push((gender as HTMLFormElement).value))
 
     const images = Array.from((document.getElementById("files") as HTMLInputElement)?.files as FileList);
 
-    images?.forEach(async (image) => {
-      const imageName = image.name
-      const path = `images/${imageName}${nanoid()}}`
+    const uploadImages = async () => {
+      const uploadPromises = images.map(async (image) => {
+        const imageName = image.name;
+        const path = `images/${imageName}${nanoid()}`;
 
-      try {
-        await uploadFile(image, path)
-        const url = await getDownloadURL(path)
-        imageURLs.push(url)
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    })
+        try {
+          const storageRef = ref(storage, path);
+          const snapshot = await uploadBytes(storageRef, image);
+          const url = await getDownloadURL(snapshot.ref);
+          myImages.push(url)
+          return url;
+        } catch (error) {
+          console.error("Error:", error);
+          return null;
+        }
+      });
+
+      return Promise.all(uploadPromises);
+    }
+
 
     try {
+      await uploadImages();
+
       const docRef = await addDoc(collection(db, "posts"), {
         postType: postType,
         description: description,
         tags: tags,
-        imageURLs: imageURLs
+        imageURLs: myImages
       })
 
       console.log(docRef.id)
