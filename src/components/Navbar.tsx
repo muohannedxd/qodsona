@@ -1,7 +1,12 @@
+<<<<<<< HEAD
+import { NavLink, Link } from "react-router-dom"
+import logo from "../assets/images/icon.png"
+=======
 import { NavLink, Link } from "react-router-dom";
 import logo from "@/assets/images/9ods_logo.png";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/auth/useAuth";
+>>>>>>> 87c988a30b21dd44ce6d2c2431b18bf6a5569a1f
 
 export default function Navbar() {
   const { isLoggedIn, user } = useAuth();

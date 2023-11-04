@@ -2,6 +2,7 @@
 // import { DocumentData, collection, getDocs, onSnapshot } from 'firebase/firestore';
 // import {firestore} from "./config/firebase"
 import Navbar from "./components/Navbar";
+
 import { Routes, Route } from "react-router-dom";
 import About from "./pages/About";
 import Post from "./pages/Post";
@@ -10,6 +11,8 @@ import Login from "./pages/Join";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import NoMatch from "./pages/NoMatch";
+
+
 
 
 function App() {
