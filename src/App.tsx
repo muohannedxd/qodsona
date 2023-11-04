@@ -1,3 +1,6 @@
+// import { useEffect, useState } from 'react';
+// import { DocumentData, collection, getDocs, onSnapshot } from 'firebase/firestore';
+// import {firestore} from "./config/firebase"
 import Navbar from "./components/Navbar";
 import { Routes, Route } from "react-router-dom";
 import About from "./pages/About";
@@ -10,6 +13,18 @@ import NoMatch from "./pages/NoMatch";
 
 
 function App() {
+  //const [users, setUsers] = useState<DocumentData[]>([])
+  //useEffect(() => {
+  //  const getUsers = async () => {
+  //    const querySnapshot = await getDocs(collection(firestore, 'users'))
+  //    const users = querySnapshot.docs.map(doc => doc.data())
+  //    setUsers(users)
+  //  }
+  //
+  //  getUsers()
+  //
+  //}, [])
+
   return (
     <>
       <Navbar />

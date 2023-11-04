@@ -1,17 +1,15 @@
 import { NavLink, Link } from "react-router-dom";
 import logo from "../assets/images/icon.png";
-import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/auth/useAuth";
+import { useState } from "react";
 
 export default function Navbar() {
-  const { isLoggedIn } = useAuth();
-
-  const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    window.location.reload();
-  };
+  const { isLoggedIn, user } = useAuth();
+  
+  if (isLoggedIn && user) {
+    var currentEmail = user.email
+  }
 
   return (
     <div className="flex items-center justify-between py-4 md:py-8 lg:py-16">
@@ -27,8 +25,8 @@ export default function Navbar() {
         ) : (
           <Link to='/profile'>
             <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-              <AvatarFallback>CN</AvatarFallback>
+              <AvatarImage src="https://github.com/shadcn" alt="@shadcn" />
+              <AvatarFallback> {currentEmail.substring(0, 2)} </AvatarFallback>
             </Avatar>
           </Link>
         )}

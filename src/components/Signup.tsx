@@ -22,10 +22,7 @@ import {
 import {
   addDoc,
   collection,
-  getDoc,
   getDocs,
-  query,
-  where,
 } from "firebase/firestore";
 
 const googleAuthProvider = new GoogleAuthProvider();
