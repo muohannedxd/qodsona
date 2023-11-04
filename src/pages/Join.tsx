@@ -146,7 +146,7 @@ export default function Login() {
   }
 
   return (
-    <div className="flex justify-center lg:px-42">
+    <div className="flex justify-center lg:px-42 pb-24">
       <Tabs
         defaultValue="signup"
         className="w-[300px] sm:w-[400px] md:w-[600px] lg:w-[800px]"
