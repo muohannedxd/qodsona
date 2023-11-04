@@ -5,7 +5,7 @@ export default function About() {
   return (
     <div
       className="flex flex-col items-center text-center gap-6 md:gap-10 lg:gap-14
-                  sm:px-20 lg:px-42 py-6 sm:py-10 h-[90vh] md:h-[85vh] lg:h-[80vh]"
+                  sm:px-20 lg:px-42 py-6 sm:py-10"
     >
       <p className="text-xl sm:text-3xl lg:text-5xl font-bold">About Us</p>
       <p className="sm:text-[1.1rem] font-semibold max-w-[700px]">
@@ -19,7 +19,7 @@ export default function About() {
         impedit nesciunt!
       </p>
       <a href="https://github.com/muohannedxd/qodsona" target="_blank">
-        <Button size={"lg"}>
+        <Button size={"lg"} className=" bg-slate-900">
           <p className="flex items-center gap-3 font-bold text-xl">
             Contribute on
             <img className="w-6" src={github} alt="github_icon" />

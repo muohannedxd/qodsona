@@ -260,7 +260,7 @@ export default function Signup() {
         )}
       </CardContent>
       <CardFooter className="flex flex-col">
-        <Button onClick={handleSubmit} className="w-[100%]">
+        <Button onClick={handleSubmit} className="w-[100%] bg-slate-900">
           Register
         </Button>
 
@@ -270,7 +270,7 @@ export default function Signup() {
           <hr className="w-24 md:w-36 lg:w-64 h-[2px] md:h-[3px] mx-auto my-4 bg-slate-800 border-0 rounded md:my-10" />
         </div>
 
-        <Button className="w-[100%]" onClick={signupGoogle}>
+        <Button className="w-[100%] bg-slate-900" onClick={signupGoogle}>
           <p className="flex items-center gap-3">
             Continue with
             <img className="w-6" src={gmail} alt="github_icon" />

@@ -141,7 +141,7 @@ export default function Profile() {
   };
 
   return (
-    <div className="h-[90vh] py-12 flex flex-col items-center">
+    <div className="py-12 flex flex-col items-center">
       <Tabs
         defaultValue="account"
         className="w-[300px] sm:w-[400px] md:w-[600px] lg:w-[800px]"
@@ -201,7 +201,7 @@ export default function Profile() {
                 </Button>
               </CardFooter>
               <CardFooter>
-                <Button onClick={handleSubmit}> Save changes </Button>
+                <Button onClick={handleSubmit} className=" bg-slate-900"> Save changes </Button>
               </CardFooter>
             </div>
             {notLoggedIn && (

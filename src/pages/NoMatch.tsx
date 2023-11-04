@@ -9,7 +9,7 @@ import {
 
 export default function NoMatch() {
   return (
-    <div className="h-[90vh] py-12 flex flex-col items-center">
+    <div className="py-12 flex flex-col items-center">
       <Card className="max-w-[800px]">
         <CardHeader>
           <CardTitle>Error</CardTitle>
