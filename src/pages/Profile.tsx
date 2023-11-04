@@ -201,7 +201,7 @@ export default function Profile() {
                 </Button>
               </CardFooter>
               <CardFooter>
-                <Button onClick={handleSubmit}> Save changes </Button>
+                <Button onClick={handleSubmit} className="bg-slate-900"> Save changes </Button>
               </CardFooter>
             </div>
             {notLoggedIn && (

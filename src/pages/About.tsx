@@ -19,7 +19,7 @@ export default function About() {
         impedit nesciunt!
       </p>
       <a href="https://github.com/muohannedxd/qodsona" target="_blank">
-        <Button size={"lg"}>
+        <Button size={"lg"} className="bg-slate-900">
           <p className="flex items-center gap-3 font-bold text-xl">
             Contribute on
             <img className="w-6" src={github} alt="github_icon" />
