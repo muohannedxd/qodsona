@@ -1,9 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
 
  
 @layer base {
@@ -78,12 +77,18 @@
     background: linear-gradient(180deg, #FFF 0%, #475569 100%);
     background-repeat: no-repeat;
     background-size: cover;
+    background-position: center;
     font-family: 'Inter', sans-serif;
-    @apply h-screen px-10 md:px-16 lg:px-20 xl:px-28
+
+    @apply px-10 md:px-16 lg:px-20 xl:px-28 min-h-screen
   }
 }
 
 .active {
   @apply bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2
   inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50
+}
+
+.error-msg-auth {
+  @apply text-red-500 flex text-xs mt-[-12px]
 }
