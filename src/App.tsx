@@ -2,12 +2,15 @@
 // import { DocumentData, collection, getDocs, onSnapshot } from 'firebase/firestore';
 // import db from "./config/firebase"
 import Navbar from "./components/Navbar";
+
 import { Routes, Route } from "react-router-dom";
 import About from "./pages/About";
 import Post from "./pages/Post";
 import Search from "./pages/Search";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
+
+
 
 function App() {
   //const [users, setUsers] = useState<DocumentData[]>([])
@@ -26,6 +29,7 @@ function App() {
   return (
     <>
       <Navbar />
+      
       <Routes>
         <Route path="/" element={<Home />}></Route>
         <Route path="/post" element={<Post />}></Route>

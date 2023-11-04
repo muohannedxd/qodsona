@@ -1,6 +1,5 @@
 import { NavLink, Link } from "react-router-dom"
 import logo from "../assets/images/icon.png"
-import { Button } from "./ui/button"
 
 export default function Navbar() {
   return (
