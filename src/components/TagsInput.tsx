@@ -11,10 +11,11 @@ import { Label } from "@/components/ui/label"
 import Select from "react-select"
 
 interface TagsInputProps {
-    tags: string[]
+    formData: Object
+    setFormData: Function
 }
 
-const TagsInput: React.FC<TagsInputProps> = ({ tags }) => {
+const TagsInput: React.FC<TagsInputProps> = ({ formData, setFormData }) => {
     const ageRanges = ["Any", "Toddler", "Child", "Adolescent", "Young Adult", "Adult", "Elderly"]
     const genders = ["Male", "Female"]
 
@@ -35,7 +36,18 @@ const TagsInput: React.FC<TagsInputProps> = ({ tags }) => {
         })
     )
 
-    console.log(ageOptions)
+    const handleAgeRangesChange = (selected: any[]) =>
+        setFormData((prevFormData: any) => ({
+            ...prevFormData,
+            ageRanges: selected,
+        }))
+
+    const handleGendersChange = (selected: any[]) =>
+        setFormData((prevFormData: any) => ({
+            ...prevFormData,
+            genders: selected
+        }))
+
 
     return <div>
         <Card className="w-full">
@@ -47,11 +59,17 @@ const TagsInput: React.FC<TagsInputProps> = ({ tags }) => {
                 <div className="grid md:grid-cols-2 gap-2">
                     <div>
                         <Label htmlFor="age-ranges">Select age category</Label>
-                        <Select id="age-ranges" options={ageOptions} isMulti/>
+                        <Select id="age-ranges" name="ageRanges" options={ageOptions} isMulti
+                            value={formData.ageRanges}
+                            onChange={handleAgeRangesChange}
+                        />
                     </div>
                     <div>
                         <Label htmlFor="gender">Select gender</Label>
-                        <Select id="gender" options={genderOptions} isMulti/>
+                        <Select id="gender" name="genders" options={genderOptions} isMulti
+                            value={formData.genders}
+                            onChange={handleGendersChange}
+                        />
                     </div>
                 </div>
             </CardContent>
