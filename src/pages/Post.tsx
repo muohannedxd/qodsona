@@ -20,7 +20,7 @@ import { Button } from "@/components/ui/button"
 import ImageUpload from "@/components/ImageUpload"
 import TagsInput from "@/components/TagsInput"
 
-import db, { storage } from "@/config/firebase"
+import { db, storage } from "@/config/firebase"
 import { collection, addDoc } from "firebase/firestore"
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage"
 import { useNavigate } from "react-router-dom"
