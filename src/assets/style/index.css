@@ -79,7 +79,8 @@
     background-size: cover;
     background-position: center;
     font-family: 'Inter', sans-serif;
-    @apply px-10 md:px-16 lg:px-20 xl:px-28
+
+    @apply px-10 md:px-16 lg:px-20 xl:px-28 min-h-screen
   }
 }
 
