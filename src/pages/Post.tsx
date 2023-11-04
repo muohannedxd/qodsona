@@ -85,7 +85,6 @@ export default function Post() {
         imageURLs: myImages
       })
 
-      console.log(docRef.id)
       navigate("/")
 
     } catch (e) {

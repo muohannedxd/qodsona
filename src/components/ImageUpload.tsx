@@ -38,7 +38,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ formData, setFormData }) => {
     }, [])
 
 
-    console.log(formData.imageURLs)
     return <>
         <div className="grid grid-cols-4 gap-1">
             {
