@@ -14,8 +14,21 @@ import { useState } from "react";
 // Import the Firebase Auth SDK
 import { useNavigate } from "react-router-dom";
 import { auth, db } from "../config/firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { addDoc, collection } from "firebase/firestore";
+import {
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+} from "firebase/auth";
+import {
+  addDoc,
+  collection,
+  getDoc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
+
+const googleAuthProvider = new GoogleAuthProvider();
 
 export default function Signup() {
   // form data
@@ -29,11 +42,11 @@ export default function Signup() {
 
   // error control
   const [lengthError, setLengthError] = useState(false);
-  const [nameError, setNameError] = useState(false)
+  const [nameError, setNameError] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [matchPassError, setMatchPassError] = useState(false);
   const [fillError, setFillError] = useState(false);
-  const [notLoggedIn, setNotLoggedIn] = useState(false)
+  const [notLoggedIn, setNotLoggedIn] = useState(false);
 
   // regex validator for email
   const validateEmail = (email) => {
@@ -83,13 +96,19 @@ export default function Signup() {
 
   const navigate = useNavigate();
 
-  const createUser = async (nm: String, mail:String, phn:String) => {
-    await addDoc(collection(db, 'users'), {
+  const createUser = async (nm: String, mail: String, phn: String) => {
+    await addDoc(collection(db, "users"), {
       name: nm,
       email: mail,
       phone: phn,
-    })
-  }
+    });
+  };
+
+  const getUser = async (email: String) => {
+    const querySnapshot = await getDocs(collection(db, "users"));
+    const users = querySnapshot.docs.map((doc) => doc.data());
+    return users.some((user) => user.email === email);
+  };
 
   // handle submission
   async function handleSubmit(event) {
@@ -107,21 +126,24 @@ export default function Signup() {
       return;
     }
 
-    // console.log(data);
     try {
-      createUser(name, email, phone)
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password)
-      const user = userCredential.user
-      localStorage.setItem('token', user.accessToken)
-      localStorage.setItem('user', JSON.stringify(user))
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+      await createUser(name, email, phone);
+      localStorage.setItem("token", user.accessToken);
+      localStorage.setItem("user", JSON.stringify(user));
     } catch (error) {
-      setNotLoggedIn(true)
-      console.error(error)
-      return
+      setNotLoggedIn(true);
+      console.error(error);
+      return;
     }
 
     // Clear the form data
-    setNameError(false)
+    setNameError(false);
     setEmailError(false);
     setFillError(false);
     setLengthError(false);
@@ -137,6 +159,27 @@ export default function Signup() {
     navigate("/search");
     window.location.reload();
   }
+
+  // signing up with google
+  const signupGoogle = async () => {
+    try {
+      const userCredentials = await signInWithPopup(auth, googleAuthProvider);
+      const user = userCredentials.user;
+      const exists = await getUser(user.email)
+      if (!exists) {
+        await createUser("Full Name", user.email, "+213555000000");
+      }
+      localStorage.setItem("token", user.accessToken);
+      localStorage.setItem("user", JSON.stringify(user));
+    } catch (error) {
+      setNotLoggedIn(true);
+      console.error(error);
+      return;
+    }
+
+    navigate("/search");
+    window.location.reload();
+  };
 
   return (
     <Card>
@@ -157,7 +200,9 @@ export default function Signup() {
             value={data.name}
           />
         </div>
-        {nameError && <p className="error-msg-auth">Enter your real valid name</p>}
+        {nameError && (
+          <p className="error-msg-auth">Enter your real valid name</p>
+        )}
         <div className="space-y-1">
           <Label htmlFor="username">Email</Label>
           <Input
@@ -169,7 +214,9 @@ export default function Signup() {
             onChange={handleChange}
           />
         </div>
-        {emailError && <p className="error-msg-auth">Enter your valid Email Address</p>}
+        {emailError && (
+          <p className="error-msg-auth">Enter your valid Email Address</p>
+        )}
         <div className="space-y-1">
           <Label htmlFor="username">Phone</Label>
           <Input
@@ -226,17 +273,17 @@ export default function Signup() {
           <hr className="w-48 h-[3px] mx-auto my-4 bg-slate-800 border-0 rounded md:my-10" />
         </div>
 
-        <Button className="w-[100%]">
+        <Button className="w-[100%]" onClick={signupGoogle}>
           <p className="flex items-center gap-3">
             Continue with
             <img className="w-6" src={gmail} alt="github_icon" />
           </p>
         </Button>
-        {notLoggedIn && 
-              <div className="mt-6 py-2 px-6 rounded-lg bg-red-400 border-4 border-red-500 font-semibold">
-                <p> An error occured, try with a different Email Address </p>
-              </div>
-              }
+        {notLoggedIn && (
+          <div className="mt-6 py-2 px-6 rounded-lg bg-red-400 border-4 border-red-500 font-semibold">
+            <p> An error occured, try with a different Email Address </p>
+          </div>
+        )}
       </CardFooter>
     </Card>
   );

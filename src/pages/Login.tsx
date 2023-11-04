@@ -13,9 +13,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { auth } from "@/config/firebase";
+import { auth, db } from "@/config/firebase";
+import { addDoc, collection, getDocs } from "firebase/firestore";
+
+const googleAuthProvider = new GoogleAuthProvider();
 
 export default function Login() {
   // form data
@@ -105,8 +108,45 @@ export default function Login() {
     window.location.reload();
   }
 
+  const createUser = async (nm: String, mail: String, phn: String) => {
+    await addDoc(collection(db, "users"), {
+      name: nm,
+      email: mail,
+      phone: phn,
+    });
+  };
+
+  const getUser = async (email: String) => {
+    const querySnapshot = await getDocs(collection(db, "users"));
+    const users = querySnapshot.docs.map((doc) => doc.data());
+    return users.some((user) => user.email === email);
+  };
+
+
+  // signing up with google
+  const loginGoogle = async () => {
+    try {
+      const userCredentials = await signInWithPopup(auth, googleAuthProvider)
+      const user = userCredentials.user
+      const exists = await getUser(user.email);
+      if (!exists) {
+        await createUser("Full Name", user.email, "+213555000000");
+      }
+      localStorage.setItem('token', user.accessToken)
+      localStorage.setItem('user', JSON.stringify(user))
+    } catch (error) {
+      setNotLoggedIn(true)
+      console.error(error)
+      return
+    }
+
+    navigate("/search");
+    window.location.reload();
+
+  }
+
   return (
-    <div className="h-[100vh] flex justify-center lg:px-42">
+    <div className="h-[110vh] flex justify-center lg:px-42">
       <Tabs
         defaultValue="signup"
         className="w-[300px] sm:w-[400px] md:w-[600px] lg:w-[800px]"
@@ -170,7 +210,7 @@ export default function Login() {
                 <hr className="w-48 h-[2px] mx-auto my-4 bg-slate-800 border-0 rounded md:my-10" />
               </div>
 
-              <Button className="w-[100%]">
+              <Button className="w-[100%]" onClick={loginGoogle}>
                 <p className="flex items-center gap-3">
                   Continue with
                   <img className="w-6" src={gmail} alt="github_icon" />
