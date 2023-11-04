@@ -1,67 +1,37 @@
-import { NavLink, Link } from "react-router-dom"
-import logo from "../assets/images/icon.png"
-import { AlignLeft } from "lucide-react";
-
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion"
-
-interface HamburgerMenuProps {
-  navLinks: Object,
-}
-
-const HamburgerMenu: React.FC<HamburgerMenuProps> = ({ navLinks }) =>
-  <Accordion type="single" collapsible>
-    <AccordionItem value='hb-menu'>
-      <AccordionTrigger>
-        <AlignLeft />
-      </AccordionTrigger>
-      <AccordionContent className="absolute">
-        <div className="flex flex-col gap-1">
-          {
-            Object.entries(navLinks).map(
-              ([label, link], index) =>
-                <div className="px-5 py-2 bg-white rounded-[8px]">
-                  <Link to={link} key={`dd-link-${index}`} className="hover:bg-[#ffffff]">{label}</Link>
-                </div>
-            )
-          }
-        </div>
-      </AccordionContent>
-    </AccordionItem>
-  </Accordion>
-
+import { NavLink, Link } from "react-router-dom";
+import logo from "@/assets/images/9ods_logo.png";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useAuth } from "@/auth/useAuth";
 
 export default function Navbar() {
+  const { isLoggedIn, user } = useAuth();
 
-  const navLinks = {
-    "Post": "/post",
-    "Search": "/search",
-    "About Us": "/about",
-    "Login": "/login"
+  if (isLoggedIn && user) {
+    var currentEmail = user.email;
   }
 
   return (
-    <div className='sticky top-0 flex items-center justify-between py-4 md:py-8 lg:py-16' id="navbar">
-      <Link to='/'>
-        <img src={logo} alt="logo" />
+    <div className="flex items-center justify-between py-4 md:py-8 lg:py-16">
+      <Link to="/">
+        <Avatar>
+          <AvatarImage src={logo} alt="logo" />
+        </Avatar>
       </Link>
-
-      <div className="md:hidden px-10">
-        <HamburgerMenu navLinks={navLinks} />
-      </div>
-
-      <div className="hidden md:flex items-center gap-4 md:gap-8 lg:gap-12 xl:gap-16">
-        {
-          Object.entries(navLinks).map(
-            ([label, link], index) =>
-              <NavLink key={`nav-item-${index}`} to={link}> {label} </NavLink>
-          )
-        }
+      <div className="flex items-center gap-4 md:gap-8 lg:gap-12 xl:gap-16">
+        <NavLink to="/post"> Post </NavLink>
+        <NavLink to="/search"> Search </NavLink>
+        <NavLink to="/about"> About Us </NavLink>
+        {!isLoggedIn ? (
+          <NavLink to="/login"> Join </NavLink>
+        ) : (
+          <Link to="/profile">
+            <Avatar>
+              <AvatarImage src="https://github.com/shadcn" alt="@shadcn" />
+              <AvatarFallback> {currentEmail.substring(0, 2)} </AvatarFallback>
+            </Avatar>
+          </Link>
+        )}
       </div>
     </div>
-  )
+  );
 }
