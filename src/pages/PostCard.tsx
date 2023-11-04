@@ -10,7 +10,6 @@ const PostCard = ({ postType, description, tags, postId }) => {
     const addLocation = () => setShowMap(true)
     const closeMap = () => setShowMap(false)
 
-    console.log(postId)
 
     return (
         <>
@@ -29,6 +28,15 @@ const PostCard = ({ postType, description, tags, postId }) => {
                             ))}
                         </div>
                     </div>
+                    <div className="grid grid-cols-4 gap-1" style={{ marginTop: '20px' }}>
+                        {imageURLs && imageURLs.length > 0 && (
+                            imageURLs.map((url, index) => (
+                                <div key={index} className="overflow-hidden max-h-[20rem] max-w-[20rem] rounded-[8px] object-cover">
+                                    <img src={url} className="max-h-full w-auto" alt={`Image ${index + 1}`} />
+                                </div>
+                            ))
+                        )}
+                    </div>
                     {/* Use description prop */}
                     <p className="card-text">{description || 'this is the desc'}</p>
 
@@ -43,7 +51,7 @@ const PostCard = ({ postType, description, tags, postId }) => {
             </div>
             {
                 showMap &&
-                <LocationPicker closeMap={postId, closeMap} />
+                <LocationPicker postId={postId} closeMap={closeMap} />
             }
         </>);
 }

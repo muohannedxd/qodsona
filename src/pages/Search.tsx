@@ -9,42 +9,42 @@ export default function Search() {
   const [searchResults, setSearchResults] = useState([]);
 
   useEffect(() => {
-    if (value.length > 0) {
-      const fetchPosts = async () => {
-        const postsRef = collection(db, "posts");
-        // const q = query(postsRef, where("tags", "array-contains", value.trim()));
-        const q = query(
+    const fetchPosts = async () => {
+      let q;
+      const postsRef = collection(db, "posts");
+
+      if (value.trim()) {
+        // If there is a search value, perform the search logic
+        q = query(
           postsRef,
           where("description", ">=", value),
           where("description", "<=", value + '\uf8ff')
         );
-        var querySnapshot = await getDocs(q);
+        let querySnapshot = await getDocs(q);
+
         if (querySnapshot.empty) {
-          // The query returned no documents
-          const q2 = query(postsRef, where("tags", "array-contains", value.trim()));
-          querySnapshot = await getDocs(q2);
+          q = query(postsRef, where("tags", "array-contains", value.trim()));
+          querySnapshot = await getDocs(q);
+
           if (querySnapshot.empty) {
-            // The query returned no documents
-            const q3 = query(
+            q = query(
               postsRef,
               where("postType", ">=", value),
               where("postType", "<=", value + '\uf8ff')
             );
-            querySnapshot = await getDocs(q3);
-            
+            querySnapshot = await getDocs(q);
           }
         }
-        try {
-          setSearchResults(querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-        } catch (error) {
-          console.error("Failed to fetch posts:", error);
-        }
-      };
+        setSearchResults(querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      } else {
+        // If there is no search value, fetch all posts
+        q = query(postsRef);
+        const querySnapshot = await getDocs(q);
+        setSearchResults(querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      }
+    };
 
-      fetchPosts();
-    } else {
-      setSearchResults([]);
-    }
+    fetchPosts();
   }, [value]);
 
   return (
