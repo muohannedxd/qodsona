@@ -45,9 +45,11 @@ const DraggableMarker = ({ center, setCenter }) => {
 
 const LocationPicker = ({ postId, closeMap, setComments }) => {
 
-    const [center, setCenter] = useState([null, null]);
+    const [center, setCenter] = useState({lat: null, lng: null});
 
     const submitLocation = () => {
+
+        if (center.lat === null || center.lng === null) return;
 
         const postRef = doc(db, "posts", postId)
         getDoc(postRef).then(
@@ -57,7 +59,9 @@ const LocationPicker = ({ postId, closeMap, setComments }) => {
                     if (!("comments" in data))
                         data.comments = []
 
-                    data.comments.push(`latitude: ${center[0]}, longitude: ${center[1]}`)
+                    
+                    const {lat, lng} = center
+                    data.comments.push(`latitude: ${lat.toFixed(2)}, longitude: ${lng.toFixed(2)}`)
 
                     updateDoc(postRef, data).then(() => {
                         console.log(`doc ${postId} updated`)
@@ -67,14 +71,13 @@ const LocationPicker = ({ postId, closeMap, setComments }) => {
                         .catch(error => console.log(error))
                 }
             })
-
     }
 
     useEffect(() => navigator.geolocation.getCurrentPosition(function (position) {
         setCenter([position.coords.latitude, position.coords.longitude])
     }), []);
 
-    return (center[0] !== null && center[1] !== null) ?
+    return (center.lng !== null && center.lat !== null) ?
 
         <div className="fixed top-0 left-0 z-[999] h-full w-full bg-black/[.55] flex flex-col justify-center">
             <XCircle onClick={closeMap} className="text-white m-10" />
