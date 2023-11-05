@@ -11,7 +11,7 @@ export default function Navbar() {
   }
 
   return (
-    <div className="flex items-center justify-between py-4 md:py-8 lg:py-16">
+    <div className="sticky top-0 left-0 right-0 z-50 flex items-center justify-between py-4 md:py-8 lg:py-16">
       <Link to="/">
         <Avatar>
           <AvatarImage src={logo} alt="logo" />
