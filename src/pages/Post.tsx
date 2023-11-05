@@ -1,6 +1,104 @@
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+
+import {
+  RadioGroup,
+  RadioGroupItem
+} from "@/components/ui/radio-group"
+
+import { useEffect, useState } from "react"
+
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
+import { Button } from "@/components/ui/button"
+
+import ImageUpload from "@/components/ImageUpload"
+import TagsInput from "@/components/TagsInput"
+
+import { db, storage } from "@/config/firebase"
+import { collection, addDoc } from "firebase/firestore"
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage"
+import { useNavigate } from "react-router-dom"
+
+import { nanoid } from "nanoid"
+import { useAuth } from "@/auth/useAuth"
 
 
-export default function Post() {
+  export default function Post() {
+
+    const { isLoggedIn, user } = useAuth()
+    const navigate = useNavigate()
+
+    if ( !isLoggedIn ) {
+      navigate("/login")
+    }
+
+  const [formData, setFormData] = useState({
+    postType: "",
+    description: "",
+    ageRanges: [],
+    genders: [],
+    imageURLs: [],
+  })
+
+  const handleSubmit = async (event: any) => {
+    event.preventDefault()
+
+    if (!event?.target) return;
+
+    const { postType, description, ageRanges, genders } = formData;
+    const myImages: string[] = []
+    const tags: string[] = []
+
+    ageRanges.forEach((ageRange: any) => tags.push((ageRange as HTMLFormElement).value))
+    genders.forEach((gender: any) => tags.push((gender as HTMLFormElement).value))
+
+    const images = Array.from((document.getElementById("files") as HTMLInputElement)?.files as FileList);
+
+    const uploadImages = async () => {
+      const uploadPromises = images.map(async (image) => {
+        const imageName = image.name;
+        const path = `images/${imageName}${nanoid()}`;
+
+        try {
+          const storageRef = ref(storage, path);
+          const snapshot = await uploadBytes(storageRef, image);
+          const url = await getDownloadURL(snapshot.ref);
+          myImages.push(url)
+          return url;
+        } catch (error) {
+          console.error("Error:", error);
+          return null;
+        }
+      });
+
+      return Promise.all(uploadPromises);
+    }
+
+
+    try {
+      await uploadImages();
+
+      const docRef = await addDoc(collection(db, "posts"), {
+        postType: postType,
+        description: description,
+        tags: tags,
+        imageURLs: myImages
+      })
+
+      navigate("/")
+
+    } catch (e) {
+      alert(e)
+    }
+  };
+
+
   return (
     <Card className="border-0 shadow-lg md:max-w-[60%] mx-auto my-5">
       <CardHeader>

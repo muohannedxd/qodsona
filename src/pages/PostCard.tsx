@@ -1,22 +1,23 @@
-import React from "react";
 import Tag from "./tag";
 import LocationPicker from "@/components/LocationPicker";
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
+import { nanoid } from "nanoid";
 
-const PostCard = ({ postType, description, tags, postId }) => {
+const PostCard = ({ postType, description, tags, imageURLs, comments, postId }) => {
 
     const [showMap, setShowMap] = useState(false)
+    const [postComments, setComments] = useState(comments)
     const addLocation = () => setShowMap(true)
     const closeMap = () => setShowMap(false)
 
 
     return (
         <>
-            <div className="card" style={{ margin: '20px' }}>
+            <div className="card" style={{ margin: '20px', minWidth: '250px', minHeight: '350px' }}>
                 <div className="card-body">
                     {/* Use title prop */}
-                    <h3 className="card-title">{postType || 'Special title treatment'}</h3>
+                    {/* <h3 className="card-title">{postType || 'Special title treatment'}</h3> */}
                     <div className="row">
                         <div className="col d-flex align-items-center">
                             <p>Tags:</p>
@@ -47,11 +48,18 @@ const PostCard = ({ postType, description, tags, postId }) => {
                         <Button onClick={addLocation} className="bg-slate-900 mr-1">Add location</Button>
                         <Button className="bg-slate-900">call</Button>
                     </div>
+                    <div className="my-2 max-h-5rem overflow-auto">
+                        {
+                            postComments &&
+                            postComments.map((comment: any) => <div key={nanoid()}
+                                className="p-2 bg-gray-100 rounded-md my-1">{JSON.stringify(comment)}</div>)
+                        }
+                    </div>
                 </div>
             </div>
             {
                 showMap &&
-                <LocationPicker postId={postId} closeMap={closeMap} />
+                <LocationPicker postId={postId} closeMap={closeMap} setComments={setComments} />
             }
         </>);
 }

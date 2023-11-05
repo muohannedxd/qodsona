@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Icon } from "leaflet"
 import { XCircle } from "lucide-react"
 import { db } from "@/config/firebase"
-import { doc, updateDoc } from "firebase/firestore"
+import { doc, updateDoc, getDoc } from "firebase/firestore"
 
 
 const DraggableMarker = ({ center, setCenter }) => {
@@ -43,7 +43,7 @@ const DraggableMarker = ({ center, setCenter }) => {
     )
 }
 
-const LocationPicker = ({ postId, closeMap }) => {
+const LocationPicker = ({ postId, closeMap, setComments }) => {
 
     const [center, setCenter] = useState([null, null]);
 
@@ -54,10 +54,17 @@ const LocationPicker = ({ postId, closeMap }) => {
             docSnapShot => {
                 if (docSnapShot.exists()) {
                     const data = docSnapShot.data()
-                    data.comments.push(center)
-                    console.log(data)
-                    updateDoc(postRef, data).then(() => console.log("doc updated"))
-                    .catch(error => console.log(error))
+                    if (!("comments" in data))
+                        data.comments = []
+
+                    data.comments.push(`latitude: ${center[0]}, longitude: ${center[1]}`)
+
+                    updateDoc(postRef, data).then(() => {
+                        console.log(`doc ${postId} updated`)
+                        setComments(data.comments)
+                        closeMap()
+                    })
+                        .catch(error => console.log(error))
                 }
             })
 
@@ -69,23 +76,18 @@ const LocationPicker = ({ postId, closeMap }) => {
 
     return (center[0] !== null && center[1] !== null) ?
 
-        <div className="fixed top-10 left-0 z-[999] h-[80%] w-full flex  justify-center align-center">
-            <XCircle onClick={closeMap} />
-            <div className="w-[80%] overflow-hidden">
-                <MapContainer center={center} zoom={10}>
-                    <DraggableMarker center={center} setCenter={setCenter} />
-                    <TileLayer
-                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                    />
-                </MapContainer>
-            </div>
-            <Button onClick={submitLocation}>Submit</Button>
+        <div className="fixed top-0 left-0 z-[999] h-full w-full bg-black/[.55] flex flex-col justify-center">
+            <XCircle onClick={closeMap} className="text-white m-10" />
+            <MapContainer center={center} zoom={10}>
+                <DraggableMarker center={center} setCenter={setCenter} />
+                <TileLayer
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                />
+            </MapContainer>
+            <Button onClick={submitLocation} className="bg-slate-900 w-[80%] m-auto">Submit</Button>
         </div>
-
         : <div>Loading...</div>
-
-
 }
 
 export default LocationPicker;
