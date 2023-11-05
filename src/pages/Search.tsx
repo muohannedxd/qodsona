@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { db } from "@/config/firebase";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import PostCard from "./PostCard.jsx";
@@ -62,8 +62,8 @@ export default function Search() {
       </div>
       {searchResults.length > 0 ? (
         searchResults.map((post) => (
-          <div className="col-sm-6"  key={post.id}>
-            <PostCard {...post} />
+          <div className="col-sm-6" key={post.id}>
+            <PostCard {...post} postId={post.id} />
           </div>
         ))
       ) : (

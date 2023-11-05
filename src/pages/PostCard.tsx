@@ -1,46 +1,67 @@
-import React from "react";
 import Tag from "./tag";
+import LocationPicker from "@/components/LocationPicker";
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { nanoid } from "nanoid";
 
-const PostCard = ({ postType, description, tags, imageURLs }) => {
-    const defaultImageUrl = 'https://firebasestorage.googleapis.com/v0/b/qodsona-cf756.appspot.com/o/images%2FBeep%20Beep%20-%20Avatar(1).pngk_YS5JIKeNJWPpCjv4qLR?alt=media&token=326cb83d-cde1-407a-8269-7ad9f0200904';
+const PostCard = ({ postType, description, tags, imageURLs, comments, postId }) => {
+
+    const [showMap, setShowMap] = useState(false)
+    const [postComments, setComments] = useState(comments)
+    const addLocation = () => setShowMap(true)
+    const closeMap = () => setShowMap(false)
+
 
     return (
-        <div className="card" style={{ margin: '20px', minWidth: '250px', minHeight: '350px'}}>
-            <div className="card-body d-flex flex-column" style={{ flexGrow: 1 }}>
-                <h3 className="card-title">{postType || 'Post Type'}</h3>
-                <div className="row">
-                    <div className="col d-flex align-items-center">
-                        <p>Tags:</p>
-                    </div>
-                    <div className="col d-flex align-items-center">
-                        {tags && tags.map((tagValue, index) => (
-                            <Tag key={index} value={tagValue} />
-                        ))}
-                    </div>
-                </div>
-
-                <div className="grid grid-cols-4 gap-1" style={{ marginTop: '20px' }}>
-                    {imageURLs && imageURLs.length > 0 ? (
-                        imageURLs.map((url, index) => (
-                            <div key={index} className="overflow-hidden max-h-[20rem] max-w-[20rem] rounded-[8px] object-cover">
-                                <img src={url} className="max-h-full w-auto" alt={`Image ${index + 1}`} />
-                            </div>
-                        ))
-                    ) : (
-                        <div className="overflow-hidden max-h-[20rem] max-w-[20rem] rounded-[8px] object-cover">
-                            <img src={defaultImageUrl} className="max-h-full w-auto" alt="Default Image" />
+        <>
+            <div className="card" style={{ margin: '20px', minWidth: '250px', minHeight: '350px' }}>
+                <div className="card-body">
+                    {/* Use title prop */}
+                    {/* <h3 className="card-title">{postType || 'Special title treatment'}</h3> */}
+                    <div className="row">
+                        <div className="col d-flex align-items-center">
+                            <p>Tags:</p>
                         </div>
-                    )}
-                </div>
+                        <div className="col d-flex align-items-center">
+                            {/* Map through tags prop */}
+                            {tags && tags.map((tagValue, index) => (
+                                <Tag key={index} value={tagValue} />
+                            ))}
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-4 gap-1" style={{ marginTop: '20px' }}>
+                        {imageURLs && imageURLs.length > 0 && (
+                            imageURLs.map((url, index) => (
+                                <div key={index} className="overflow-hidden max-h-[20rem] max-w-[20rem] rounded-[8px] object-cover">
+                                    <img src={url} className="max-h-full w-auto" alt={`Image ${index + 1}`} />
+                                </div>
+                            ))
+                        )}
+                    </div>
+                    {/* Use description prop */}
+                    <p className="card-text">{description || 'this is the desc'}</p>
 
-                <p className="card-text">{description || 'No description provided.'}</p>
+                    <div className="text-right">
+                        {/* <a href="#" className="btn btn-primary" style={{ backgroundColor: 'black', marginBottom: '1px' }} onClick={addLocation}>
+                        Add location
+                    </a> */}
+                        <Button onClick={addLocation} className="bg-slate-900 mr-1">Add location</Button>
+                        <Button className="bg-slate-900">call</Button>
+                    </div>
+                    <div className="my-2 max-h-5rem overflow-auto">
+                        {
+                            postComments &&
+                            postComments.map((comment: any) => <div key={nanoid()}
+                                className="p-2 bg-gray-100 rounded-md my-1">{JSON.stringify(comment)}</div>)
+                        }
+                    </div>
+                </div>
             </div>
-            <div className="text-right" style={{ marginBottom: '10px' }}>
-                <a href="#" className="btn btn-primary" style={{ backgroundColor: 'black', marginRight: '10px', marginBottom: '10px' }}>Add location</a>
-                <a href="#" className="btn btn-primary" style={{ backgroundColor: 'black', marginRight: '10px', marginBottom: '10px' }}>Call</a>
-            </div>
-        </div>
-    );
+            {
+                showMap &&
+                <LocationPicker postId={postId} closeMap={closeMap} setComments={setComments} />
+            }
+        </>);
 }
 
 export default PostCard;
